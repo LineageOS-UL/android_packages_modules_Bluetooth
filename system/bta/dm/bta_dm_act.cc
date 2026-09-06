@@ -125,6 +125,10 @@ static const char kPropertySniffOffloadEnabled[] =
 #define PROPERTY_PAGE_TIMEOUT "bluetooth.core.classic.page_timeout"
 #endif
 
+#ifndef PROPERTY_BLE_VND_SUPPORTED
+#define PROPERTY_BLE_VND_SUPPORTED "bluetooth.core.le.vendor_capabilities.enabled"
+#endif
+
 namespace {
 
 struct WaitForAllAclConnectionsToDrain {
@@ -268,7 +272,7 @@ void BTA_dm_on_hw_on() {
       osi_property_get_int32(PROPERTY_PAGE_TIMEOUT,
                              p_bta_dm_cfg->page_timeout));
 
-  if (ble_vnd_is_included()) {
+  if (osi_property_get_bool(PROPERTY_BLE_VND_SUPPORTED, true)) {
     get_btm_client_interface().ble.BTM_BleReadControllerFeatures(
         bta_dm_ctrl_features_rd_cmpl_cback);
   } else {
